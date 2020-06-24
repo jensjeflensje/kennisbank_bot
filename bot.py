@@ -62,9 +62,7 @@ async def on_message(message):
                                       color=0x78C2AD)
                 embed.set_footer(text="https://kennisbank.jederu.nl")
                 await message.channel.send(embed=embed)
-                return
-            else:
-                error = "Question not found :("
+            return
         else:
             error = "Whoops, something went wrong :("
         embed = discord.Embed(title="Error!", description=error,
