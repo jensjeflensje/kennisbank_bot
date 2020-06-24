@@ -19,12 +19,11 @@ async def change_status():
 
 def fetch_channels():
     while True:
-        r = requests.get("http://localhost:8000/api/channels/", params={"api_key": config.API_KEY})
+        r = requests.get("https://kennisbank.jederu.nl/api/channels/", params={"api_key": config.API_KEY})
         if r.status_code == 200:
             data = r.json()
             if data["success"]:
                 global channels_data
-                print(data)
                 channels_data = data["data"]
         time.sleep(5)
 
@@ -43,14 +42,13 @@ async def on_message(message):
         guild_channels = channels_data[str(message.channel.guild.id)]
     except Exception as e:
         print(str(e))
-        embed = discord.Embed(title="Fout!", description="Geen configuratie voor deze server gevonden :(",
+        embed = discord.Embed(title="Error!", description="No config found for this server :(",
                               color=0xff0000)
         embed.set_footer(text="https://kennisbank.jederu.nl")
         await message.channel.send(embed=embed)
         return
-    print(message.channel.id)
     if message.channel.id in guild_channels:
-        r = requests.get("http://localhost:8000/api/answer/", params={
+        r = requests.get("https://kennisbank.jederu.nl/api/answer/", params={
             "api_key": config.API_KEY,
             "question": message.content,
             "guild": message.channel.guild.id,
@@ -66,10 +64,10 @@ async def on_message(message):
                 await message.channel.send(embed=embed)
                 return
             else:
-                error = "De vraag is niet gevonden :("
+                error = "Question not found :("
         else:
-            error = "Oeps, er is iets fout gegaan :("
-        embed = discord.Embed(title="Fout!", description=error,
+            error = "Whoops, something went wrong :("
+        embed = discord.Embed(title="Error!", description=error,
                               color=0xff0000)
         embed.set_footer(text="https://kennisbank.jederu.nl")
         await message.channel.send(embed=embed)
