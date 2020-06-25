@@ -44,7 +44,6 @@ async def on_message(message):
         print(str(e))
         embed = discord.Embed(title="Error!", description="No config found for this server :(",
                               color=0xff0000)
-        embed.set_footer(text="https://kennisbank.jederu.nl")
         await message.channel.send(embed=embed)
         return
     if message.channel.id in guild_channels:
@@ -57,17 +56,18 @@ async def on_message(message):
         if r.status_code == 200:
             data = r.json()
             if data["success"]:
+                time = data["time"]
+                time = round(time * 1000000) / 1000
                 data = data["data"]
                 embed = discord.Embed(title=data["question"], description=data["answer"],
                                       color=0x78C2AD)
-                embed.set_footer(text="https://kennisbank.jederu.nl")
+                embed.set_footer(text=f"⏱ {time}ms")
                 await message.channel.send(embed=embed)
             return
         else:
             error = "Whoops, something went wrong :("
         embed = discord.Embed(title="Error!", description=error,
                               color=0xff0000)
-        embed.set_footer(text="https://kennisbank.jederu.nl")
         await message.channel.send(embed=embed)
 
 
